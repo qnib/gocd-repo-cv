@@ -1,0 +1,63 @@
+format_version: 3
+environments:
+  generic:
+    environment_variables:
+      DOCKER_TAG: latest
+      DOCKER_NO_CACHE: false
+      DOCKER_REG: ip-172-31-47-133.eu-west-1.compute.internal
+      DOCKER_REGISTRY: ip-172-31-47-133.eu-west-1.compute.internal
+      FROM_IMG_REGISTRY: ip-172-31-47-133.eu-west-1.compute.internal
+      UCP_USER: moby
+      DOCKER_BUILD_LOCAL: true
+      DOCKER_REGISTRY_INSECURE: true
+    pipelines:
+      - uplain-dev
+      - pip3-dev
+      - cv-dev
+pipelines:
+  uplain-init:
+    group: docker
+    template: DockerBuild
+    label_template: ${COUNT}
+    lock_behavior: none
+    environment_variables:
+      DOCKER_FILE: bionic/Dockerfile
+    materials:
+      git:
+        git: https://github.com/qnib/init-plain.git
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        destination: init-plain
+  pip3-dev:
+    group: docker
+    template: DockerBuild
+    label_template: ${COUNT}
+    lock_behavior: none
+    materials:
+      git:
+        git: https://github.com/qnib/uplain-pip3
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        destination: docker
+      uplain-init:
+        pipeline: uplain-init
+        stage: DockerBuild
+        name: uplain-init
+  cv-dev:
+    group: docker
+    template: DockerBuild
+    label_template: ${COUNT}
+    lock_behavior: none
+    materials:
+      git:
+        git: https://github.com/qnib/uplain-pip3-cv-dev
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        destination: docker
+      pip3-dev:
+        pipeline: pip3-dev
+        stage: DockerBuild
+        name: pip3-dev
