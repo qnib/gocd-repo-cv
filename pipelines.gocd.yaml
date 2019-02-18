@@ -14,6 +14,7 @@ environments:
       - uplain-init
       - pip3-dev
       - cv-dev
+      - cv-bazel-dev
 pipelines:
   uplain-init:
     group: docker
@@ -61,3 +62,19 @@ pipelines:
         pipeline: pip3-dev
         stage: DockerBuild
         name: pip3-dev
+  cv-bazel-dev:
+    group: docker
+    template: DockerBuild
+    label_template: ${COUNT}
+    lock_behavior: none
+    materials:
+      git:
+        git: https://github.com/qnib/uplain-bazel
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        destination: docker
+      cv-dev:
+        pipeline: cv-dev
+        stage: DockerBuild
+        name: cv-dev
