@@ -11,7 +11,7 @@ environments:
       DOCKER_BUILD_LOCAL: true
       DOCKER_REGISTRY_INSECURE: true
     pipelines:
-      - uplain-dev
+      - uplain-init
       - pip3-dev
       - cv-dev
 pipelines:
