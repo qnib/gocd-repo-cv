@@ -30,6 +30,12 @@ pipelines:
         auto_update: true
         branch: master
         destination: init-plain
+      git:
+        git: https://github.com/qnib/uplain-init.git
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        destination: docker
   pip3-dev:
     group: docker
     template: DockerBuild
